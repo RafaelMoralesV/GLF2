@@ -129,33 +129,66 @@ function tablaEstados(maquina){
       if((incompatibles(maquina,maquina.estados[i],maquina.estados[j]))!=true){ //si son equivalentes
         //console.log(maquina.estados[i].caracter,' ',maquina.estados[j].caracter)
         if(maquina.estados[i].caracter==maquina.est_inicial ){ // si el nodo1 es estado inicial, se agrega nodo2
-               var a=new estado();
-               a=maquina.estados[j];
-               for(var k=0;k<a.nomb_estados.length;k++){
-                  if(a.nomb_estados[k]==maquina.estados[i].caracter){
-                    a.nomb_estados[k]=a.caracter; //redirecciona a si mismo
-
-                  }
-               }
-               maquina.reducido.push(a);
-               maquina.eliminados.push(maquina.estados[i]);
-               for(var u=0;u<maquina.estados.length;u++){  //busca en el automata si tienen coneccion con el nodo1, para redirigir
-                 for(var t=0;t<maquina.estados[u].nomb_estados.length;t++){
-                 if(maquina.estados[u].nomb_estados==maquina.estados[i]){
-                   maquina.estados[u].nomb_estados==maquina.estados[u].caracter;
-        }}}}
+               redirigir(maquina,maquina.estados[i],maquina.estados[i]);
+               ExisteAgregar(maquina,maquina.estados[j]);
+        }
         else{
-          for(var q=0;q<maquina.reducido.length;q++){
+          for(var q=0;q<maquina.reducido.length;q++){ //equivalentes
             if(maquina.reducido[q].caracter!=maquina.estados[i].caracter){
-                 console.log(maquina.estados[i].caracter)
-                 //maquina.reducido.push(maquina.estados[i])
+                 if(existe(maquina.reducido,maquina.estados[j])!=0){
+                   redirigir(maquina,maquina.estados[j],maquina.estados[i]); //redurije los que entran a j
+                   ExisteAgregar(maquina,maquina.estados[i]);
+                 }
             }
           }
+        }
+      }
+      else{
+        maquina.tabla[i][j]='x'; //rellena la tabla los estados no equivalentes
+        for(var k=0;k<maquina.est_final.length;k++){ //agrega estados finales ya que no son reducibles
+        if(maquina.estados[i].caracter==maquina.est_final[k]){
+          ExisteAgregar(maquina,maquina.estados[i]);
         }
       }
     }
   }
 }
+}
+
+function redirigir(maquina,estado1,estado2){
+  for(var u=0;u<maquina.estados.length;u++){  //busca en el automata si tienen coneccion con el nodo1, para redirigir
+    for(var t=0;t<maquina.estados[u].nomb_estados.length;t++){
+     if(maquina.estados[u].nomb_estados[t]==estado1.caracter){
+      maquina.estados[u].nomb_estados[t]=estado2.caracter;
+     }
+   }
+  }
+}
+
+function ExisteAgregar(maquina,estado){ //revisa si ya fue agregado un estado a reducido, si no lo fue lo agrega
+  var aux=0;
+  for(var i=0;i<maquina.reducido.length;i++){
+    if(estado.caracter==maquina.reducido[i].caracter){
+      aux=1;
+    }
+  }
+  if(aux==0){
+    maquina.reducido.push(estado);
+  }
+  else{
+    return 1;
+  }
+}
+
+function existe(lista,estado){
+  for(var i=0;i<lista.length;i++){
+    if(estado.caracter==lista[i].caracter){
+      return 0;
+    }
+  }
+  return;
+}
+
 var aux=new maquina();
 setEstadoInicial(aux,'5');
 setEstadosFinales(aux,'1');
@@ -174,8 +207,9 @@ setOpciones(aux,'2','a','4');
 setOpciones(aux,'2','b','1');
 setOpciones(aux,'1','a','1');
 setOpciones(aux,'1','b','1');
-//showEstados(aux);
+showEstados(aux); //muestra automata completo
 //recorrer(aux,'abaa');
 tablaEstados(aux);
-console.log(aux.reducido);
+console.log(aux.tabla) //muestra tabla de estados distinguibles
+console.log(aux.reducido); //muestra el automata reducido
 //crear funcion para asignar posicion a estado segun corresponda (de ser necesario)
