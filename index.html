@@ -1,63 +1,117 @@
+<?php include "ClaseAutomata.php"; 
+      include "Funciones.php";
+
+  $CantidadEstados;
+  $Paso1=false;
+  $Paso2=false;
+  $Paso3=false;
+  $Paso4=false;
+  $Paso5=false;
+  $Cont=0;
+  $ABC="";
+  if(isset($_POST['Submit1']))
+  {
+    $CantidadEstados=$_POST['CantEstados'];
+    $Paso1=true;
+  }
+  if(isset($_POST['Submit2']))
+  {
+    $Arr;
+    $CantidadEstados=$_POST['CantEstados'];
+    $Paso1=true;
+    $Letra=$_POST['Letra'];
+    $aux=$_POST['Aux'];
+    if(strlen($Letra)==1)
+    {
+      $Existe=validarExistente($aux,$Letra);
+      if($Existe==0)
+      {
+        
+        $ABC=$aux.$Letra;
+      }
+      else
+      {
+        $ABC=$_POST['Aux'];
+        echo'<html>Valor ya ingresado</html>';
+      }       
+      
+    }
+    else
+    {
+      
+      $ABC=$_POST['Aux'];
+       echo'<html>Ingrese una letra</html>';
+    }
+ 
+  }
+  if(isset($_POST['Submit3']))
+  {
+    $CantidadEstados=$_POST['CantEstados'];
+    $ABC=$_POST['Aux'];
+    $Paso1=true;
+    $Paso2=true;
+  }
+  if(isset($_POST['Submit4']))
+  {
+    $CantidadEstados=$_POST['CantEstados'];
+    $ABC=$_POST['Aux'];
+    $EI=$_POST['EInicial'];
+    $EIFBool=boxtobool($_POST['Finado']);
+    $Paso1=true;
+    $Paso2=true;
+    $Paso3=true;
+  }
+    
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript">
-
-		function obtenerdatos()
-		{
-			var nombre= document.getElementById("nombre").value;
-			var edad = parseFloat(document.getElementById('edad').value);
-			var arre = new Array();
-            const app = require("./app.js");
-
-            let p = app(nombre, edad);
-
-            console.log(app);
-            console.log(p);
-
-            document.registro.ewe.value = p.toString();
-		}
-
-	</script>
-
-	<title></title>
-	
-	<script type="text/javascript" src="main.js"></script>
+  <title>Trabajo Grafos 2</title>
 </head>
 <body>
-	<h1>OWOLA</h1>
-	<form name="registro">
-		<br><p>Ingresa nombre uwu</p>
-		<input type="hidden" name="act" id="act" >
-		<table border="1">
-		<tr>
-			<td>Nombre:</td><td><input type="text" name="nombre" id="nombre"></td>
-		</tr>
-		<tr>
-			<td>Edad:</td><td><input type="text" name="edad" id="edad"></td>
-		</tr>
-		<tr>
-			<td ><input type="button" name="btn1" value="Enviar" onclick="obtenerdatos()"></td>
-		</tr>
-	</table>
-	<br/><br/><br/><br/>
-	<table border ="1">
-	<tr>
-		<td>Nombre:</td><td><input type="text" name="nombreobtenido" id="nombreobtenido"></td>
-	</tr>
-	<tr>
-		<td>Edad:</td><td><input type="text" name="edadobtenida" id="edadobtenida"></td>
-	</tr>
-	<h2 name = 'ewer' id='ewer'></h2>
-
-</table>
-	Array:<input type="text" name="ewe" id="ewe">
-
-
-	
-
-
-	</form>
-
+<?php 
+if($Paso1==false)
+  {
+    echo "
+    <form name='EstadosCant' method='post' action=''>
+    <br><p>Ingresa la cantidad de estados del automata:</p>
+    <input type='number' name='CantEstados' min='2' max='100' placeholder='Cantidad' required>
+    <input type='submit' name='Submit1' value='Siguiente'>
+    </form>";
+  }
+else if($Paso2==false )
+    {
+    echo "<html>
+    <form name='Alf' method='post' action=''>
+    <br><p>Añada letras al alfabeto:</p>
+    <input type='text' name='Letra' placeholder='Letra'>
+    <input hidden='number' name='CantEstados' value=$CantidadEstados>
+    <input hidden='text' name='Aux' value=$ABC>
+    <input type='submit' name='Submit2' value='Añadir'>
+    <input type='submit' name='Submit3' value='Finalizar'>
+    </form></html>";
+    echo "<html><br><h1>Cantidad de estados :$CantidadEstados<br> Array de letras : $ABC</h1></html>";
+    }
+else if($Paso3==false)
+    {
+    echo "<html>
+    <form name='EI' method='post' action=''>
+    <br><p>Ingrese el estado inicial del automata: </p>
+    <input type='text' name='EInicial' placeholder='Etiqueta de estado' required>
+    <input hidden='number' name='CantEstados' value=$CantidadEstados>
+    <input hidden='text' name='Aux' value=$ABC>
+    ¿Estado Finalizado?<input type='checkbox' name='Finado'>
+    <input type='submit' name='Submit4' value='Siguiente'>
+    </form></html>";
+    echo "<html><br><h1>Cantidad de estados : $CantidadEstados<br> Array de letras : $ABC</h1></html>";
+    }
+else if($Paso4==false)
+    {
+      
+      echo "<html><br><h1>Cantidad de estados : $CantidadEstados<br> Array de letras : $ABC
+      <br>Estado inicial = $EI , Finalizado = $EIFBool</h1></html>";
+    }
+?>
 </body>
 </html>
