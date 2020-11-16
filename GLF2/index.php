@@ -4,7 +4,6 @@ $cont=0;
 if(isset($_POST['Submit7']))
  {
   $Automata1=($_POST['Automata']);
-  $Tipo1=($_POST['Tipo']);
   $cont=1;
  }
 if(isset($_POST['Submit8']))
@@ -19,7 +18,9 @@ if(isset($_POST['Submit8']))
 <head>
   <title>Index Trabajo 2 Grafos</title>
 </head>
-<body><center>
+<body>
+
+  <center>
   <?php 
   if($cont==0)
   {
@@ -33,6 +34,7 @@ if(isset($_POST['Submit8']))
     <form method='post' action='IngresoAFND.php'>
       <input type='submit' value=AFND>
     </form></html>";
+    console_log("Seleccione tipo de automata, luego de eso podrá ingresar el alfabeto de entrada del automata");
   }
  if($cont==1)
  {
@@ -51,8 +53,10 @@ if(isset($_POST['Submit8']))
       <input type='hidden' name='Automata1' value=".$Automata1.">
       <input type='hidden' name='Tipo1' value=".$Tipo1.">
     </form></html>";
-
-  echo'<h3> <br>Automata 1 Ingresado <br> Tipo : '.$Tipo1;
+    console_log("Puede volver a seleccionar el tipo de automata a ingresar");
+    console_log("Bajo los botones de AFD y AFND se encuentra el automata anteriormente ingresado");
+    console_log("Seleccione tipo de automata, luego de eso podrá ingresar el alfabeto de entrada del automata");
+  echo'<h3> <br>Automata 1 Ingresado <br> ';
   MostrarAutomata(unserialize($Automata1));
   echo'<br></h3>';
  }

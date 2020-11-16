@@ -8,6 +8,7 @@ class Estado
 } 
 class Maquina
 {
+  public $Tipo;
   public $Estados=array();
   public $Caracteres; 
   public $Est_Inicial; 
@@ -104,138 +105,7 @@ function Mostrar2($auto)
   }
  }
 
- function transicion($maquina,$nodo,$op)
- {
-  for($i=0;$i<count($maquina->Estados);$i++)
-  {
-    if($maquina->Estados[$i]->Caracter==$nodo)
-    {
-      for($j=0;$j<count($maquina->Estados[$i]->Opciones);$j++)
-      {
-        if($maquina->Estados[$i]->Opciones[$j]==$op)
-        {
-          return $maquina->Estados[$i]->Nomb_estados[$j];
-        }
-      }
-    }
-  }
- }
- /*function recorrer ($maquina,$string)
- {
-  for($i=0;$i<strlen($string);$i++)
-  {
-    $a=transicion($maquina,$maquina->Posicion,$string[$i]);
-    $maquina->Posicion=$a;
-    array_push($maquina->Camino,$a);
-  }
- }*/
- function incompatibles($maquina,$nod1,$nod2)
- {
-  if($nod1->Caracter==$nod2->Caracter)
-  {
-    return true;
-  }
-  for($i=0;$i<count($maquina->Est_Final);$i++)
-  {
-    if($nod1->Caracter==$maquina->Est_Final[$i])
-    {
-      return true;
-    }
-    if($nod2->Caracter==$maquina->Est_Final[$i])
-    {
-      return true;
-    }
-  }
  
-  for($i=0;$i<count($nod1->Nomb_estados);$i++)
-  {
-    for($j=0;$j<count($nod1->Nomb_estados);$j++)
-    {
-      if($nod1->Opciones[$i]==$nod2->Opciones[$j])
-      {
-        if($nod1->Nomb_estados[$i]!=$nod2->Nomb_estados[$j])
-        {
-          for($k=0;$k<count($maquina->Est_Final);$k++)
-          {
-            if($nod1->Nomb_estados[$i]==$maquina->Est_Final[$k] || $nod2->Nomb_estados[$j]==$maquina->Est_Final[$k])
-            {
-
-              return true;
-
-            }
-          }
-        }
-      }
-    }
-  }
- }
- function tablaEstados($maquina)
- {
-  $maquina->Reducido=$maquina->Estados;
-  inicializarTabla($maquina);
-
-  for($i=0;$i<count($maquina->Reducido);$i++)
-  {
-    
-    for($j=0;$j<count($maquina->Reducido);$j++)
-    {
-
-      if(existe($maquina->Reducido,$maquina->Reducido[$j])!=true)
-      {
-        if((incompatibles($maquina,$maquina->Reducido[$i],$maquina->Reducido[$j]))!=true)
-        {
-          if($maquina->Reducido[$i]==$maquina->Est_Inicial)
-           {
-            $maquina->Est_Inicial=$maquina->Reducido[$j]->Caracter;
-           }
-           redirigir($maquina,$maquina->Reducido[$i]);
-
-           array_splice($maquina->Reducido,$i,1);
-          
-
-        }
-      }
-    }
- }
-}
- function redirigir($maquina,$estado1)
- {
-
-  for($u=0;$u<count($maquina->Estados);$u++)
-  {
-    for($t=0;$t<count($maquina->Estados[$u]->Nomb_estados);$t++)
-    {
-      if($maquina->Estados[$u]->Nomb_estados[$t]==$estado1->Caracter)
-      {
-        $maquina->Estados[$u]->Nomb_estados[$t]=$maquina->Estados[$u]->Caracter;
-      }
-    }
-  }
-  
- }
- function ExisteAgregar($maquina,$estado)
- {
-  
-  $aux=0;
-  
-  for($i=0;$i<count($maquina->Reducido);$i++)
-  {
-    #echo'<br> '.$estado->Caracter.' vs '.$maquina->Reducido[$i]->Caracter;
-    if($estado->Caracter==$maquina->Reducido[$i]->Caracter)
-    {
-
-      $aux=1;
-    }
-
-  }
-  if($aux==0)
-  {
-
-    array_push($maquina->Reducido,$estado);
-  }
-  else
-    return 1;
- }
  function rellenaTabla($maquina)
  {
   for($i=0;$i<count($maquina->Estados);$i++)
@@ -271,6 +141,7 @@ function Mostrar2($auto)
       
   }
   
+  
 
  }
  function SetEFinales($automata,$e)
@@ -283,4 +154,5 @@ function Mostrar2($auto)
       }
     }
   }
+
 ?>

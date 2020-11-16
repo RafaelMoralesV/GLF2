@@ -282,6 +282,7 @@ function validarExistente3($Arreglo,$Entrada1,$Entrada2,$Entrada3)
 }
 function LlenarAutomata($Automata,$Estados,$Transa,$ABC)
 {
+  $Automata->Caracteres=$ABC;
   $EstadosL=GetEstados($Estados);//CONTIENE TODOS LOS ESTADOS 1 SOLA VEZ
 //  $EFinales=GetFinales($Estados);//CONTIENE SI O NO SEGUN $EstadosL
   $Esta2=ArrayP1($ABC,$EstadosL);//REPITE LOS ESTADOS AAAA BBBB CCCC DDDD
@@ -308,10 +309,10 @@ function llenarTransiciones($Automata,$Transa)
     }
   }
 }
-function LlenarAutomata2($Automata,$Estados,$Transa)
+function LlenarAutomata2($Automata,$Estados,$Transa,$ABC)
 {
   //GuardarTransiciones/Opciones
-
+  $Automata->Caracteres=$ABC;
   $EstadosL=GetEstados($Estados);
   $Automata->Est_Inicial=$EstadosL[0];
   $Automata->Posicion=$EstadosL[0];
@@ -326,6 +327,8 @@ function MostrarAutomata($Automata)
   echo '<html><br>
 
     <table border 1>
+    <tr>&nbsp;&nbsp;&nbsp;&nbsp;AUTOMATA DE TIPO : '.$Automata->Tipo.'
+    <tr><th>Alfabeto de entrada</th><th>'.$Automata->Caracteres.'</th><tr>
     <tr><th>Estado Inicial  </th><th>'.$Automata->Est_Inicial.'</th></tr>
     <tr><th>Estados finales  <th>';
        foreach($Automata->Est_Final as $x)
@@ -350,5 +353,66 @@ function MostrarAutomata($Automata)
         }
       }
       echo '</table></br>';
+}
+function MostrarAutomataReducido($Automata)
+{
+  echo '<html><br>
+
+    <table border 1>
+    <tr>&nbsp;&nbsp;&nbsp;&nbsp;AUTOMATA DE TIPO : '.$Automata->Tipo.'
+    <tr><th>Alfabeto de entrada</th><th>'.$Automata->Caracteres.'</th><tr>
+    <tr><th>Estado Inicial  </th><th>'.$Automata->Est_Inicial.'</th></tr>
+    <tr><th>Estados finales  <th>';
+       foreach($Automata->Est_Final as $x)
+        {
+         echo ' '.$x.' ';
+        }
+      echo'</th></th></tr>
+      <tr>
+        <th>Estados</th><th>Transiciones</th>
+      </tr>
+      <tr>';
+      for($i=0;$i<count($Automata->Reducido);$i++)
+      {
+        echo'<th>'.$Automata->Reducido[$i]->Caracter.'</th>';
+        {
+          echo'<th><table border 1>';
+          for($j=0;$j<count($Automata->Reducido[$i]->Opciones);$j++)
+          {
+            echo'<th>&nbsp;&nbsp;&nbsp;&nbsp;'.$Automata->Reducido[$i]->Opciones[$j].'&nbsp;&nbsp;&nbsp;&nbsp;</th><th>→</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$Automata->Reducido[$i]->Nomb_estados[$j].'&nbsp;&nbsp;&nbsp;&nbsp;</th><tr>';
+          }
+          echo'</tr></table></tr>';
+        }
+      }
+      echo '</table></br>';
+}
+function console_log( $data ){
+  echo '<script>';
+  echo 'console.log('. json_encode( $data ) .')';
+  echo '</script>';
+}
+function unirABC($Abc1,$Abc2)
+{
+  $Aux;
+  for($i=0;$i<strlen($Abc1);$i++)
+  {
+    $Aux=$Aux.$Abc1[$i];
+  }
+  for($i=0;$i<strlen($Abc2);$i++)
+  {
+    $cont=0;
+    for($j=0;$j<strlen($Abc1);$j++)
+    {
+      if($Abc2[$i]==$Abc1[$j])
+      {
+        $cont++;
+      }
+    }
+    if($cont==0)
+    {
+      $Aux=$Aux.$Abc2[$i];
+    }
+  }
+  return $Aux;
 }
 ?>
