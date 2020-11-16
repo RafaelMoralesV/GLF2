@@ -309,6 +309,7 @@ function llenarTransiciones($Automata,$Transa)
     }
   }
 }
+
 function LlenarAutomata2($Automata,$Estados,$Transa,$ABC)
 {
   //GuardarTransiciones/Opciones
@@ -323,7 +324,7 @@ function LlenarAutomata2($Automata,$Estados,$Transa,$ABC)
 
 }
 function MostrarAutomata($Automata)
-{
+{ 
   echo '<html><br>
 
     <table border 1>

@@ -77,7 +77,7 @@ function complemento($maquina)
 		{
 			array_push($aux,$a->Estados[$i]->Caracter);
 		}
-	}$a->Est_Final($aux);
+	}$a->Est_Final=$aux;
 	return $a;
 }
 
@@ -85,7 +85,7 @@ function concatenacion($maquina1,$maquina2)
 {
 	$res=new Maquina;
 	$aux = new Estado;
-	$aux=$maquina2;
+	$aux2=$maquina2;
 	for($j=0;$j<count($maquina1->Estados);$j++)
 	{
 		for($i=0;$i<count($maquina1->Est_Final);$i++)
@@ -123,7 +123,7 @@ function existeC($lista,$caracter)
  
    
   }
-  if($cont==0)
+  if($cont!=0)
   {
   	return 0;
   }
@@ -249,10 +249,279 @@ function ExisteAgregar($maquina,$estado)
 	else
 		return 1;
 }
+function interseccion ($maquina1,$maquina2)
+{
+	$a1=complemento($maquina1);
+	$a2=complemento($maquina2);
+	$final=union($a1,$a2);
+	return $final;
+}
+function tablatransic($maquina1)
+{
+	$tabla=array();
+	$aux=array();
+	array_push($aux,'&');
+	for($j=0;$j<strlen($maquina1->Caracteres);$j++)
+	{
+		array_push($aux,$maquina->Caracteres[$j]);
+	}
+	array_push($tabla,$aux);
+	$aux=array();
+	for($k=0;$k<count($maquina1->Estados);$k++)
+	{
+		$aux=array();
+		array_push($aux,$maquina1->Estados[$k]->Caracter);
+		for($i=1;$i<count($tabla[0]);$i++)
+		{
+			$aux2=array();
+			$cont=0;
+			for($u=0;$u<count($maquina1->Estados[$k]->Opciones);$u++)
+			{
+				if($maquina1->Estados[$k]->Opciones[$u]==$tabla[0][$i])
+					{
+						$cont+=1;
+						array_push($maquina->Estados[$k]->Nomb_estados[$u]);
+					}
+			}
+			if($cont==0)
+			{
+				array_push($aux2,'0');
+			}
+			array_push($aux,$aux2);
+		} array_push($tabla,$aux);
+	}
+	return $tabla;
+}
+function rellenaTabla($maquina)
+{
+	for($i=0;$i<count($maquina->Estados);$i++)
+	{
+		for($j=0;$j<count($maquina->Estados);$j++)
+		{
+			if(incompatibles($maquina,$maquina->Estados[$i],$maquina->Estados[$j])==true)
+			{
+				$maquina->Tabla[$i][$j]=0;
+			}
+			else
+			{
+				$maquina->Tabla[$i][$j]='x';
+			}
+		}
+	}
+}
+
+function setRES($aux,$res,$columna,$tabla)
+{
+	$s=array();
+	for($m=0;$m<count($res[0]);$m++)
+	{
+		array_push($s,'#');
+	}
+	if($columa[0]=='#')
+	{
+		if(count(columna)==1)
+		{
+			if(existeE($res,$columna)==false)
+			{
+				array_push($res,$s);
+			}
+		}
+	}
+	else
+	{
+		if(existeE($res,$columna)!=true)
+		{
+			opE($aux,$columna,$res,$tabla);
+			array_push($res,$aux);
+		}
+	}
+}
+function inicializacionRes($res,$tabla)
+{
+	$r=array();
+	array_push($r,'&');
+	for($t=0;$t<count($tabla[0]);$t++)
+	{
+		if($tabla[0][$t]!='Ɛ')
+		{
+			array_push($res,$r);
+		}
+	}
+}
+function existeE($res,$estado)
+{
+	$cont=0;
+	for($i=1;$i<count($res);$i++)
+	{
+		if(count($res[$i][0])==count($estado))
+		{
+			for($j=0;$j<count($estado);$j++)
+			{
+				for($c=0;c<count($res[$i][0]);$c++)
+				{
+					if($res[$i][0][$c]==$estado[$j])
+					{
+						$cont=$cont+1;
+					}
+				}
+			}
+			if($cont==count($estado))
+			{
+				return true;
+			}
+		}
+	}return false;
+}
+function opE($aux,$auxe,$res,$tabla)
+{
+	$ep=0;
+	for($y=1;$y<count($tabla[0]);$y++)
+	{
+		if($tabla[0][$y]=='Ɛ')
+		{
+			$ep=$y;
+		}
+	}
+	for($j=1;$j<count($tabla[0]);$j++)
+	{
+		for($i=1;$i<strlen($res[0]);$i++)
+		{
+			if($tabla[0][$j]==$res[0][$i])
+			{
+				$auxop=array();
+				for($k=1;$k<count($tabla);$k++)
+				{
+					for($l=0;$l<count($auxe);$l++)
+					{
+						if($tabla[$k][0]==$auxe[$l])
+						{
+							for($c=0;$c<count($tabla[$k][$j]);$c++)
+							{
+								for($g=1;$g<count($tabla);$g++)
+								{
+									if($tabla[$g][0]==$tabla[$k][$j])
+									{
+										if($tabla[$g][$ep][0]!='0')
+										{
+											for($f=0;$f<count($tabla[$g][$ep]);$f++)
+											{
+												array_push($auxop,$tabla[$g][$ep][$f]);
+											}
+										}
+									}
+								}
+								if(existeC($auxop,$tabla[$k][$j][$c])!=0)
+								{
+									if($tabla[$k][$j][$c]!='0')
+									{
+										array_push($auxop,$tabla[$k][$j][$c]);
+									}
+									else
+									{
+										if(count($auxop)==0)
+										{
+											array_push($auxop,'#');
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+				array_push($aux,$auxop);
+			}
+		}
+	}
+}
+function transformacion($maquina1)
+{
+	$maquinaf=new Maquina;
+	$a=null;
+	$aux=array();
+	$auxe=array();
+	$auxop=array();
+	$res=array();
+	$tabla=tablatransic($maquina1);
+	print_r($tabla);
+	array_push($auxe,$maquina1->Est_Inicial);
+	$a=$auxe;
+	for($a=1;$a<strlen($maquina1->Caracteres);$a++)
+	{
+		if($tabla[0][$a]=='Ɛ')
+		{
+			for($b=1;$b<count($tabla)-1;$b++)
+			{
+				for($c=0;$c<count($tabla[$b][$a]);$c++)
+				{
+
+					if($tabla[$b][$a]!=['0'])
+					{
+						array_push($auxe,$tabla[$b][$a][$c]);
+						$a=$a+$tabla[$b][$a];
+					}
+				}
+			}
+		}
+	}array_push($aux,$auxe);
+	$maquinaf->Est_Inicial=$a;
+	inicializacionRes($res,$tabla);
+	opE($aux,$auxe,$res,$tabla);
+	array_push($res,$aux);
+	$cont=0;
 
 
 
+	for($e=1;$e<count($res);$e++)
+	{
+		for($y=1;$y<count($res[0]);$y++)
+		{
+			if(existeE($res,$res[$e][$y])==false)
+			{
+				$aux=array();
+				array_push($aux,$res[$e][$y]);
+				setRES($aux,$res,$res[$e][$y],$tabla);
+			}
+		}
+	}$fin=array();
 
 
 
+	for($i=1;$i<count($res);$i++)
+	{
+		$cont=0;
+		$aux=$res[0];
+		$string=$res[$i][0][0];
+		for($l=1;$l<count($res[$i][0]);$l++)
+		{
+			$string=$res[$i][0][$l].$string;
+			for($t=0;$t<count($maquina1->Est_Final);$t++)
+			{
+				if($res[$i][0][$l]==$maquina1->Est_Final[$t] || $res[$i][0][0]==$maquina1->Est_Final[$t])
+				{
+					$cont=1;
+				}
+			}
+		}
+		if($cont==1)
+		{
+			array_push($fin,$string);
+		}
+		setEstados($maquinaf,$string);
+		for($y=1;$y<count($aux);$y++)
+		{
+			$op=$aux[$y];
+			$tran=$res[$i][$y][0];
+			for($h=1;$h<count($res[$i][$y]);$h++)
+			{
+				$tran=$res[$i][$y][$h]+$tran;
+			}
+			setOpciones($maquinaf,$string,$op,$tran);
+		}
+
+	}$maquinaf->Est_Final=$fin;
+
+	return $maquinaf;
+
+}
 ?>

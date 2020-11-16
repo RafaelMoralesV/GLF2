@@ -29,18 +29,19 @@ function llenarEstados($auto,$e)
     $auto->Estados[$i]=$Aux;
   }
  }
-function setOpciones($auto,$c,$op,$est)
+
+  function setOpciones($maquina,$c,$op,$est)
+{
+  for($i=0;$i<count($maquina->Estados);$i++)
   {
-    for($i=0;$i<count($auto->Estados);$i++)
+    if($maquina->Estados[$i]->Caracter==$c)
     {
-      if($auto->Estados[$i]->Caracter==$c)
-      {
-        $auto->Estados[$i]->Opciones[count($auto->Estados[$i]->Opciones)]=$op;
-        $auto->Estados[$i]->Nomb_estados[count($auto->Estados[$i]->Nomb_estados)]=$est;
-                break;
-      }
+      array_push($maquina->Estados[$i]->Opciones,$op);
+      array_push($maquina->Estados[$i]->Nomb_estados,$est);
+      break;
     }
   }
+}
  function LlenarOpciones($auto,$Estados1,$Trans,$Estados2)
   {
     for($i=0;$i<count($Trans);$i++)
@@ -106,22 +107,7 @@ function Mostrar2($auto)
  }
 
  
- function rellenaTabla($maquina)
- {
-  for($i=0;$i<count($maquina->Estados);$i++)
-  {
-    for($j=0;$j<count($maquina->Estados);$j++)
-    {
-      if((incompatibles($maquina,$maquina->Estados[$i],$maquina->Estados[$j]))==true)
-        {
-          $maquina->Tabla[$i][$j]='x';
-        }
-        else{
-          $maquina->Tabla[$i][$j]=0;
-        }
-    }
-  }
- }
+ 
  function existe($lista,$estado)
  {
   $cont=1;
